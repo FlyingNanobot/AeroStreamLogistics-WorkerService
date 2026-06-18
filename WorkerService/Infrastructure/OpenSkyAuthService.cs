@@ -3,6 +3,14 @@ using WorkerService.Models;
 
 namespace WorkerService.Infrastructure
 {
+    /// <summary>
+    /// Handles acquiring and caching OAuth2 tokens for calling the OpenSky API.
+    /// </summary>
+    /// <remarks>
+    /// This service uses IHttpClientFactory to create short-lived HttpClient instances
+    /// and caches the retrieved access token until shortly before expiry to avoid
+    /// requesting tokens on every call.
+    /// </remarks>
     public class OpenSkyAuthService
     {
         private readonly IConfiguration _config;
@@ -16,6 +24,15 @@ namespace WorkerService.Infrastructure
             _httpClientFactory = httpClientFactory;
         }
 
+        /// <summary>
+        /// Retrieve a valid access token. Uses a cached token when available and not expired.
+        /// </summary>
+        /// <returns>A bearer token string to be used in an Authorization header.</returns>
+        /// <remarks>
+        /// The cached token is refreshed slightly before its expiry (30 seconds) to prevent
+        /// edge-case expiration during API calls. Callers should reuse this value until it
+        /// expires instead of requesting tokens for every request.
+        /// </remarks>
         public async Task<string> GetAccessTokenAsync()
         {
             if (_cachedToken != null && DateTime.UtcNow < _expiry)

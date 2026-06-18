@@ -9,6 +9,15 @@ using WorkerService.Models;
 
 namespace WorkerService.Workers
 {
+    /// <summary>
+    /// Background worker that periodically ingests state vectors from the OpenSky API
+    /// and publishes them to a Kafka topic.
+    /// </summary>
+    /// <remarks>
+    /// The worker uses IHttpClientFactory to create a client, OpenSkyAuthService to obtain
+    /// bearer tokens, and IKafkaProducer to publish messages. It honors cancellation via
+    /// the provided CancellationToken and polls on a fixed delay.
+    /// </remarks>
     public class OpenSkyIngestionWorker : BackgroundService
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -31,6 +40,14 @@ namespace WorkerService.Workers
             _config = config;
         }
 
+        /// <summary>
+        /// Core execution loop invoked by the BackgroundService host.
+        /// </summary>
+        /// <remarks>
+        /// The method runs until the host signals cancellation. It retrieves an access token,
+        /// performs the OpenSky request, deserializes the result and publishes each aircraft
+        /// state to the configured Kafka topic.
+        /// </remarks>
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var client = _httpClientFactory.CreateClient("opensky");

@@ -3,8 +3,21 @@ using WorkerService.Models;
 
 namespace WorkerService.Infrastructure
 {
+    /// <summary>
+    /// Lightweight deserializer for OpenSky JSON responses.
+    /// </summary>
+    /// <remarks>
+    /// OpenSky returns an array-based 'states' structure where each element is a heterogeneous
+    /// array. This class provides a minimal parser that maps those array indices into a
+    /// strongly-typed OpenSkyResponse and AircraftState objects.
+    /// </remarks>
     public static class OpenSkyDeserializer
     {
+        /// <summary>
+        /// Parse the raw JSON payload from OpenSky into a typed OpenSkyResponse.
+        /// </summary>
+        /// <param name="json">Raw JSON returned by the OpenSky API.</param>
+        /// <returns>OpenSkyResponse with Time and a list of AircraftState entries.</returns>
         public static OpenSkyResponse Parse(string json)
         {
             using var doc = JsonDocument.Parse(json);
