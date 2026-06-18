@@ -47,7 +47,7 @@ namespace WorkerService.Workers
 
                 foreach (var aircraft in data.States)
                 {
-                    await _producer.PublishAsync("telemetry.raw", aircraft);
+                    await _producer.PublishAsync("telemetry-stream", aircraft);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
