@@ -26,7 +26,7 @@
         /// Each entry contains positional, ident and flight-related data for one tracked
         /// transponder/ads-b emitter. Some fields are nullable when data is not available.
         /// </remarks>
-        public List<AircraftState> States { get; set; }
+        public List<AircraftState>? States { get; set; }
     }
 
     /// <summary>
@@ -42,17 +42,17 @@
         /// <summary>
         /// Unique ICAO 24-bit address in hexadecimal (lowercase).
         /// </summary>
-        public string Icao24 { get; set; }          // Unique ICAO hex
+        public string? Icao24 { get; set; }          // Unique ICAO hex
 
         /// <summary>
         /// Callsign as reported by the aircraft. Often padded with spaces or null.
         /// </summary>
-        public string Callsign { get; set; }        // Flight callsign
+        public string? Callsign { get; set; }        // Flight callsign
 
         /// <summary>
         /// Country inferred from the ICAO address allocation.
         /// </summary>
-        public string OriginCountry { get; set; }   // Country of origin
+        public string? OriginCountry { get; set; }   // Country of origin
 
         /// <summary>
         /// Time (Unix epoch seconds) of the last position update for this aircraft, if known.
@@ -129,7 +129,7 @@
         /// <summary>
         /// Assigned squawk (transponder) code as a string. May be null or empty.
         /// </summary>
-        public string Squawk { get; set; }
+        public string? Squawk { get; set; }
 
         /// <summary>
         /// Special position indicator (SPI) flag — true when set.
